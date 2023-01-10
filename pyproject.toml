@@ -1,0 +1,25 @@
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "restsuite"
+version = "0.1.0"
+description = "Easily work with Netsuite's REST API"
+readme = "README.md"
+authors = [{name = "Peter Williams", email = "petercw94@gmail.com"}, {name="Richard Demke"}, {name="Andy Gannaway"}]
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["netsuite", "oauth", "rest"]
+dependencies = [
+    "requests"
+]
+requires-python = ">=3.8"
+
+[project.urls]
+
