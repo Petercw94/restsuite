@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+restsuite/__init__.py
+restsuite/auth.py
+restsuite/base_rest.py
+restsuite/rest.py
+restsuite/restlet.py
+restsuite/suiteql.py
+restsuite.egg-info/PKG-INFO
+restsuite.egg-info/SOURCES.txt
+restsuite.egg-info/dependency_links.txt
+restsuite.egg-info/requires.txt
+restsuite.egg-info/top_level.txt
