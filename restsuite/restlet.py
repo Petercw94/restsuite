@@ -5,7 +5,7 @@ Module for interacting with Netsuite Restlets
 from .base_rest import Rest
 
 
-class NetSuiteRest(Rest):
+class NetSuiteRESTlet(Rest):
     """
     """
 
