@@ -40,7 +40,7 @@ class Rest:
         """
 
         # type checking
-        if headers and not headers.isinstance(dict):
+        if headers and not isinstance(headers, dict):
             raise TypeError(
                 "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
 
@@ -86,11 +86,11 @@ class Rest:
         """
 
         # type checking
-        if headers and not headers.isinstance(dict):
+        if headers and not isinstance(headers, dict):
             raise TypeError(
                 "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
 
-        if not body.isinstance(dict):
+        if not isinstance(body, dict):
             raise TypeError(
                 "Expected dictionary for headers parameter. Received: {}".format(type(body)))
 
@@ -188,7 +188,7 @@ class Rest:
         """
 
         # type checking
-        if headers and not headers.isinstance(dict):
+        if headers and not isinstance(headers, dict):
             raise TypeError(
                 "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
 

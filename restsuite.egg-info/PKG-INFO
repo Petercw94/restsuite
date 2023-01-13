@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: restsuite
-Version: 0.1.3
+Version: 0.1.4
 Summary: Easily work with Netsuite's REST API
 Author: Peter Williams, Richard Demke, Andy Gannaway
 Author-email: Peter Williams <petercw94@gmail.com>
