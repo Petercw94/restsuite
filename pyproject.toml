@@ -4,8 +4,8 @@ requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "suitepy"
-version = "0.1.0"
+name = "restsuite"
+version = "0.1.5"
 description = "Easily work with Netsuite's REST API"
 readme = "README.md"
 authors = [

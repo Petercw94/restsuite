@@ -1,27 +1,26 @@
-# suitepy
+# restsuite
 
-suitepy (prounounced Sweetypy) is a python package developed to help developers interact with the Netsuite REST API. suitepy offers a number of classes that can be utilized to interact with Netsuite's Suite-Talk, RESTlet, or SuiteQL services. suitepy currently utilizes Netsuite's token authentication methods, however, current development is under way for supporting Netsuite's Oauth2 authentication methods. 
+restsuite is a python package developed to help developers interact with the Netsuite REST API. restsuite offers a number of classes that can be utilized to interact with Netsuite's Suite-Talk, RESTlet, or SuiteQL services. restsuite currently utilizes Netsuite's token authentication methods, however, current development is under way for supporting Netsuite's Oauth2 authentication methods. 
 
-__NOTE :__ _suitepy is built off of the restsuite foundation. The restsuite package will not be updated any further. Suitepy contains all the functionality found in the restsuite package, but will continue to be updated in the future._
 
 ### Disclaimer:  
 
-*suitepy is still in developement stages and is currently being tested through usage in our company. Although open to the public for use, understand that this is not a stable version of the suitepy package. Integrating suitepy into production applications at this stage is not advised.*
+*restsuite is still in developement stages and is currently being tested through usage in our company. Although open to the public for use, understand that this is not a stable version of the restsuite package. Integrating restsuite into production applications at this stage is not advised.*
 
 ## Installation
 
-suitepy is part of the Python Package Index (PyPI) and can thus be installed with pip:
+restsuite is part of the Python Package Index (PyPI) and can thus be installed with pip:
 
 ```
-pip install suitepy
+pip install restsuite
 ```
 
-suitepy requires a python version of 3.8 or higher and depends only on the [requests python package](https://requests.readthedocs.io/en/latest/) 
+restsuite requires a python version of 3.8 or higher and depends only on the [requests python package](https://requests.readthedocs.io/en/latest/) 
 
 
 ## Getting Started
 
-As suitepy is an abstraction of the Netsuite API, it will be helpful to become familiar with, or at least reference, the Netsuite API documentation:
+As restsuite is an abstraction of the Netsuite API, it will be helpful to become familiar with, or at least reference, the Netsuite API documentation:
 
 - [Suite-Talk Documentation](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391670.html)
 - [RESTlet Documentation](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_N2970701.html)
@@ -41,7 +40,7 @@ Each class requires that you pass the following attributes upon object instantia
 
 ## Suite-Talk
 
-The *suitepy.NetSuiteRest* class provides an interface to NetSuite's [Suite-Talk API](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391670.html). 
+The *restsuite.NetSuiteRest* class provides an interface to NetSuite's [Suite-Talk API](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391670.html). 
 
 For a full list of available resources, see the [NetSuite REST API Browser: Record API v1](https://system.netsuite.com/help/helpcenter/en_US/APIs/REST_API_Browser/record/v1/2022.2/index.html)
 
@@ -49,9 +48,9 @@ For a full list of available resources, see the [NetSuite REST API Browser: Reco
 
 Instantiating a Suite-Talk object:
 ```python
-import suitepy
+import restsuite
 
-netsuite = suitepy.NetSuiteRest(
+netsuite = restsuite.NetSuiteRest(
     account_id = NS_ACCOUNT_ID,
     consumer_key = CONSUMER_KEY,
     consumer_secret = CONSUMER_SECRET,
@@ -114,7 +113,7 @@ response = netsuite.delete(url=url)
 
 "A restlet is a SuiteScript that executes when called by an external application or by another SuiteScript. Depending on how the RESTlet is written and called, it may also return data to the calling application."
 
-The *suitepy.NetSuiteRESTlet* class acts as an external application that allows you to activate RESTlets based on a handful of HTTP verbs:
+The *restsuite.NetSuiteRESTlet* class acts as an external application that allows you to activate RESTlets based on a handful of HTTP verbs:
 
 - GET
 - POST
@@ -129,9 +128,9 @@ Calling a RESTlet is similar to the Suite-Talk methods shown above. Only one exa
 
 #### Sending a GET request to RESTlet:
 ```python
-import suitepy
+import restsuite
 
-netsuite = suitepy.NetSuiteRESTlet(
+netsuite = restsuite.NetSuiteRESTlet(
     account_id = NS_ACCOUNT_ID,
     consumer_key = CONSUMER_KEY,
     consumer_secret = CONSUMER_SECRET,
@@ -149,9 +148,9 @@ response = netsuite.get(url)
 NetSuite allows for users to query their records their version of SQL, SuiteQL. In order to utilize SuiteQL, query strings are sent to a suiteql endpoint. SuiteQL queries can be sent to Netsuite using the NetSuiteQL class:
 
 ```python
-import suitepy
+import restsuite
 
-netsuite = suitepy.NetSuiteQL(
+netsuite = restsuite.NetSuiteQL(
     account_id = NS_ACCOUNT_ID,
     consumer_key = CONSUMER_KEY,
     consumer_secret = CONSUMER_SECRET,

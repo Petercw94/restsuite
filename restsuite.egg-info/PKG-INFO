@@ -36,28 +36,29 @@ Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
-# Restsuite
+# restsuite
 
-Restsuite is a python package developed to help developers interact with the Netsuite REST API. Restsuite offers a number of classes that can be utilized to interact with Netsuite's Suite-Talk, RESTlet, or SuiteQL services. Restsuite currently utilizes Netsuite's token authentication methods, however, current development is under way for supporting Netsuite's Oauth2 authentication methods. 
+restsuite is a python package developed to help developers interact with the Netsuite REST API. restsuite offers a number of classes that can be utilized to interact with Netsuite's Suite-Talk, RESTlet, or SuiteQL services. restsuite currently utilizes Netsuite's token authentication methods, however, current development is under way for supporting Netsuite's Oauth2 authentication methods. 
+
 
 ### Disclaimer:  
 
-*Restsuite is still in developement stages and is currently being tested through usage in our company. Although open to the public for use, understand that this is not a stable version of the restsuite package. Integrating Restsuite into production applications at this stage is not advised.*
+*restsuite is still in developement stages and is currently being tested through usage in our company. Although open to the public for use, understand that this is not a stable version of the restsuite package. Integrating restsuite into production applications at this stage is not advised.*
 
 ## Installation
 
-Restsuite is part of the Python Package Index (PyPI) and can thus be installed with pip:
+restsuite is part of the Python Package Index (PyPI) and can thus be installed with pip:
 
 ```
 pip install restsuite
 ```
 
-Restsuite requires a python version of 3.8 or higher and depends only on the [requests python package](https://requests.readthedocs.io/en/latest/) 
+restsuite requires a python version of 3.8 or higher and depends only on the [requests python package](https://requests.readthedocs.io/en/latest/) 
 
 
 ## Getting Started
 
-As Restsuite is an abstraction of the Netsuite API, it will be helpful to become familiar with, or at least reference, the Netsuite API documentation:
+As restsuite is an abstraction of the Netsuite API, it will be helpful to become familiar with, or at least reference, the Netsuite API documentation:
 
 - [Suite-Talk Documentation](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391670.html)
 - [RESTlet Documentation](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_N2970701.html)
