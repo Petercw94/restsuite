@@ -317,6 +317,7 @@ class NetsuiteOAuth:
 
         return base_url, parameters
 
+    # the following functions were referenced from: https://stackoverflow.com/questions/8529265/google-authenticator-implementation-in-python
     @staticmethod
     def generateHOTP(secret, intervals_no):
         key = base64.b32decode(secret, True)
