@@ -95,7 +95,7 @@ class Rest:
                 "Expected dictionary for headers parameter. Received: {}".format(type(body)))
 
         # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("PATCH", url)
+        default_headers = self.auth.generate_auth_header("POST", url)
 
         # override headers if necessary
         if headers:
@@ -150,7 +150,7 @@ class Rest:
                 "Expected dictionary for headers parameter. Received: {}".format(type(body)))
 
         # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("PATCH", url)
+        default_headers = self.auth.generate_auth_header("PUT", url)
 
         # override headers if necessary
         if headers:
