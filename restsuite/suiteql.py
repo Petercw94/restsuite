@@ -65,6 +65,8 @@ class NetSuiteQL:
         next_url = self.url
         queryRun = 0
 
+        self.response_body = []
+
         while (moreQueries):
             moreQueries = False
 
