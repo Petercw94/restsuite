@@ -2,6 +2,8 @@
 Module for making SuiteQL queries
 """
 
+import json
+
 from .auth import NetsuiteOAuth
 import requests
 
@@ -38,7 +40,7 @@ class NetSuiteQL:
 
         """
 
-        body = '{"q": "' + query_string + '"}'
+        body = json.dumps({"q": query_string})
 
         headers = self.auth.generate_auth_header("POST", url)
 
