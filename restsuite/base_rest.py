@@ -193,7 +193,7 @@ class Rest:
                 "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
 
         # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("GET", url)
+        default_headers = self.auth.generate_auth_header("DELETE", url)
 
         # override headers if necessary
         if headers:
