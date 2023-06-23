@@ -5,13 +5,56 @@ Base Class for SuiteTalk and RESTlet.
 import requests
 import json
 
-from .auth import NetsuiteOAuth
+from auth import NetsuiteOAuth
 
 
 class Rest:
     def __init__(self, account_id, consumer_key, consumer_secret, token_key=None, token_secret=None) -> None:
         self.auth = NetsuiteOAuth(
             account_id, consumer_key, consumer_secret, token_key, token_secret)
+        
+    # def make_request(self, method: str, url: str, body: dict = None, headers=None, params: dict = None):
+    def make_request(self, method: str, url: str, **kwargs):
+
+        headers = kwargs.get('headers')
+        body = kwargs.get('body')
+        params = kwargs.get('params')
+
+        # type checking
+        if headers and not isinstance(headers, dict):
+            raise TypeError(
+                "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
+        if body and not isinstance(body, dict):
+            raise TypeError(
+                "Expected dictionary for body parameter. Received: {}".format(type(body)))
+
+        # generate default auth headers:
+        default_headers = self.auth.generate_auth_header(method.upper(), url)
+
+        # override headers if necessary
+        if headers:
+            headers["Authorization"] = default_headers["Authorization"]
+        else:
+            headers = default_headers
+
+        if body:
+            response = requests.request(method, url, headers=headers, data=json.dumps(body, default=str), params=params)
+        else:
+            response = requests.request(method, url, headers=headers, params=params)
+
+        return response     
+
+    def _get(self, url: str, **kwargs):
+        return self.make_request("GET", url, **kwargs)
+
+    def _post(self, url: str, body: dict, headers=None):
+        return self.make_request("POST", url, body=body, headers=headers)
+
+    def _put(self, url: str, body: dict, headers=None):
+        return self.make_request("PUT", url, body=body, headers=headers)
+
+    def _delete(self, url: str, headers=None):
+        return self.make_request("DELETE", url, headers=headers)
 
     def get(self, url: str, headers=None):
         """
