@@ -3,9 +3,6 @@
 restsuite is a python package developed to help developers interact with the Netsuite REST API. restsuite offers a number of classes that can be utilized to interact with Netsuite's Suite-Talk, RESTlet, or SuiteQL services. restsuite currently utilizes Netsuite's token authentication methods, however, current development is under way for supporting Netsuite's Oauth2 authentication methods. 
 
 
-### Disclaimer:  
-
-*restsuite is still in developement stages and is currently being tested through usage in our company. Although open to the public for use, understand that this is not a stable version of the restsuite package. Integrating restsuite into production applications at this stage is not advised.*
 
 ## Installation
 
@@ -15,7 +12,7 @@ restsuite is part of the Python Package Index (PyPI) and can thus be installed w
 pip install restsuite
 ```
 
-restsuite requires a python version of 3.8 or higher and depends only on the [requests python package](https://requests.readthedocs.io/en/latest/) 
+restsuite requires a python version of 3.8 or higher and depends on the [requests python package](https://requests.readthedocs.io/en/latest/) and the [requests_oauthlib python package](https://pypi.org/project/requests-oauthlib/)
 
 
 ## Getting Started
@@ -28,7 +25,7 @@ As restsuite is an abstraction of the Netsuite API, it will be helpful to become
 
 ### Authentication
 
-Each of the provided classes (NetSuiteRest, NetSuiteRESTlet, NetSuiteQL) handle authentication for the developer. All that is required is basic account information that can be generated in the user's account integration settings (see [REST Web Services Prerequisites and Setup](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1544787084.html) for a guide on setting up your Netsuite application to utilize REST capabilities)
+Each of the provided classes (NetSuiteRest, NetSuiteRESTlet, NetSuiteQL) utilize the [requests_oauthlib](https://pypi.org/project/requests-oauthlib/) package to handle authentication for the developer. All that is required is basic account information that can be generated in the user's account integration settings (see [REST Web Services Prerequisites and Setup](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1544787084.html) for a guide on setting up your Netsuite application to utilize REST capabilities)
 
 Each class requires that you pass the following attributes upon object instantiation:
 - Netsuite Account ID : This can be found the Netsuite url path (e.g: *https://{{ account_id }}.app.netsuite.com)*)
@@ -63,12 +60,12 @@ netsuite = restsuite.NetSuiteRest(
 ```python
 url = "https://{}.suitetalk.api.netsuite.com/services/rest/record/v1/job".format(NS_ACCOUNT_ID)
 
-response = netsuite.get(url)
+response = netsuite.request("GET", url)
 
-if response.status_code <= 300:
+if response.status_code < 300:
     data = response.json()
 ```
-*[Getting docs]()*
+*[Getting docs](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1545141500.html#Getting-a-Record-Instance)*
 
 *It is important to note here that all classes will require the full URL to be passed to each request method.*
 
@@ -78,7 +75,7 @@ url = "https://{}.suitetalk.api.netsuite.com/services/rest/record/v1/job/12345".
 
 body = {"entityid": "New Customer", "companyname": "My Company", "subsidiary": {"id": "1"}}
 
-response = netsuite.post(url=url, body=body)
+response = netsuite.request("POST", url=url, body=body)
 ```
 *[Creating docs](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1545141395.html)*
 
@@ -88,7 +85,7 @@ url = "https://{}.suitetalk.api.netsuite.com/services/rest/record/v1/job/12345".
 
 body = {"entityid": "Updated Customer"}
 
-response = netsuite.patch(url=url, body=body)
+response = netsuite.request("PATCH", url=url, body=body)
 ```
 *[Updating docs](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1545142173.html)*
 
@@ -98,7 +95,7 @@ url = "https://{}.suitetalk.api.netsuite.com/services/rest/record/v1/job/12345".
 
 body = {"firstName": "John", "lastName": "Smith"}
 
-response = netsuite.put(url=url, body=body)
+response = netsuite.request("PUT", url=url, body=body)
 ```
 *[Upsert docs](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_156335203191.html)*
 
@@ -106,7 +103,7 @@ response = netsuite.put(url=url, body=body)
 ```python
 url = "https://{}.suitetalk.api.netsuite.com/services/rest/record/v1/job/12345".format(NS_ACCOUNT_ID)
 
-response = netsuite.delete(url=url)
+response = netsuite.request("DELETE", url=url)
 ```
 
 ## RESTlet
@@ -140,7 +137,7 @@ netsuite = restsuite.NetSuiteRESTlet(
 
 url = "https://{}.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script={}&deploy={}".format(NS_ACCOUNT_ID, SCRIPT_ID, DEPLOYMENT_ID)
 
-response = netsuite.get(url)
+response = netsuite.request("GET", url)
 ```
 
 ## SuiteQL

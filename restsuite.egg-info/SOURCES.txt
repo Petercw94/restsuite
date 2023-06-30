@@ -2,7 +2,6 @@ LICENSE
 README.md
 pyproject.toml
 restsuite/__init__.py
-restsuite/auth.py
 restsuite/base_rest.py
 restsuite/rest.py
 restsuite/restlet.py
