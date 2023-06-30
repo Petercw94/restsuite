@@ -4,7 +4,7 @@ Module for making SuiteQL queries
 
 import json
 
-from .auth import NetsuiteOAuth
+from requests_oauthlib import OAuth1
 import requests
 
 
@@ -13,8 +13,14 @@ class NetSuiteQL:
     """
 
     def __init__(self, account_id, consumer_key, consumer_secret, token_key=None, token_secret=None) -> None:
-        self.auth = NetsuiteOAuth(
-            account_id, consumer_key, consumer_secret, token_key, token_secret)
+        self.auth = OAuth1(
+            realm=account_id,
+            client_key=consumer_key,
+            client_secret=consumer_secret,
+            resource_owner_key=token_key,
+            resource_owner_secret=token_secret,
+            signature_method="HMAC-SHA256"
+        )
         self.url = "https://{}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql".format(
             account_id)
         self.items = []
@@ -42,9 +48,13 @@ class NetSuiteQL:
 
         body = json.dumps({"q": query_string})
 
-        headers = self.auth.generate_auth_header("POST", url)
+        headers = {
+            "Prefer": "transient",
+            "Content-Type": "application/json",
+            "cache-control": "no-cache"
+        }
 
-        response = requests.post(url, headers=headers, data=body, cookies={
+        response = requests.post(url, headers=headers, auth=self.auth, data=body, cookies={
                                  'NS_ROUTING_VERSION': 'LAGGING'})
 
         return response

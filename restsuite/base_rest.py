@@ -5,202 +5,74 @@ Base Class for SuiteTalk and RESTlet.
 import requests
 import json
 
-from .auth import NetsuiteOAuth
+from requests_oauthlib import OAuth1
 
 
 class Rest:
     def __init__(self, account_id, consumer_key, consumer_secret, token_key=None, token_secret=None) -> None:
-        self.auth = NetsuiteOAuth(
-            account_id, consumer_key, consumer_secret, token_key, token_secret)
+        self.auth = OAuth1(
+            realm=account_id,
+            client_key=consumer_key,
+            client_secret=consumer_secret,
+            resource_owner_key=token_key,
+            resource_owner_secret=token_secret,
+            signature_method="HMAC-SHA256"
+        )
 
-    def get(self, url: str, headers=None):
+    def request(self, method: str, url: str, **kwargs):
         """
-        Retrieve data from netsuite. 
+        NEW for version 1.
 
-        Wrapper function for all endpoints in the Netsuite API that accept the
-        GET http method. 
+        Main request method inherited by each NetSuite interface. 
+        Key-word arguments can be passed dependent upon the http 
+        method desired. This allows for a single method to be called
+        for every method desired. 
 
         Args:
-        -----
-        - url (str) -> The url from which to get data (actual url, not base string. see Examples section for example)
-        - headers (dict) -> Optional dictionary of headers to override the defaults. (See README or NetsuiteOAuth.generate_headers for defaults)
+            method (str) : HTTP method for request
+            url (str) : url to send request to
 
-        Returns:
-        --------
-        - response (obj) -> requests.response object from GET request. 
+        Kwargs:
+            headers (dict) : desired request headers for the request
+            body (dict) : body data for POST, PATCH, PUT type requests
+            params (dict) : query parameters for request NOTE: query params 
+                            can also be passed directly into the url.
 
-        Examples:
-        ---------
-        URL: https://{{ NETSUITE ACCOUNT ID }}.suitetalk.api.netsuite.com/services/rest/record/v1/job/ 
-
-        HEADERS: {"Prefer": "respond-async", "limit": 100, "offset": 2}
-            NOTE: The get method would take the above headers parameter and add the Authorization 
-            header to it, in order to properly sign the request. All other default headers will be dropped.
+        Returns 
+            response (obj) : requests.Response instance object
 
         """
+        headers = kwargs.get('headers')
+        body = kwargs.get('body')
+        params = kwargs.get('params')
 
         # type checking
         if headers and not isinstance(headers, dict):
             raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
+                "Expected type dict for headers | received type: {}".format(
+                    type(headers))
+            )
 
-        # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("GET", url)
+        if body and not isinstance(body, dict):
+            raise TypeError(
+                "Expected type dict for body | received type: {}".format(
+                    type(headers))
+            )
+        # if no headers are provided, default to the following
+        if not headers:
+            headers = {
+                "Prefer": "transient",
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            }
 
-        # override headers if necessary
-        if headers:
-            headers["Authorization"] = default_headers["Authorization"]
+        # request library raises ValueError if GET or HEAD requests contain a body
+        if method.upper() in ("GET", "HEAD"):
+            res = requests.request(method.upper(), url,
+                                   headers=headers, auth=self.auth, params=params)
+        # all other requests can have the body passed
         else:
-            headers = default_headers
+            res = requests.request(method.upper(), url,
+                                   headers=headers, auth=self.auth, params=params, data=json.dumps(body, default=str))
 
-        response = requests.get(url, headers=headers)
-
-        return response
-
-    def post(self, url: str, body: dict, headers=None):
-        """
-        Create a record in Netsuite.
-
-        Wrapper function for all endpoints in the Netsuite API that accept the 
-        PATCH http method.
-
-        Args:
-        -----
-        - url (str) -> The url from which to get data (actual url, not base string. see Examples section for example)
-        - body (dict) -> The POST body containing fields to update and their new values as key-value pairs.
-        - headers (dict) -> Optional dictionary of headers to override the defaults. (See README or NetsuiteOAuth.generate_headers for defaults)
-
-        Returns:
-        --------
-        - response (obj) -> requests.response object from GET request. 
-
-        Examples:
-        ---------
-        URL: https://{{ NETSUITE ACCOUNT ID }}.suitetalk.api.netsuite.com/services/rest/record/v1/job/12345
-
-        BODY: {"entityid": "Updated Customer"} <- update customer 12345's entity id to "Updated Customer"
-
-        HEADERS: {"Prefer": "respond-async", "limit": 100, "offset": 2}
-            NOTE: The get method would take the above headers parameter and add the Authorization 
-            header to it, in order to properly sign the request. All other default headers will be dropped.
-        """
-
-        # type checking
-        if headers and not isinstance(headers, dict):
-            raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
-
-        if not isinstance(body, dict):
-            raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(body)))
-
-        # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("POST", url)
-
-        # override headers if necessary
-        if headers:
-            headers["Authorization"] = default_headers["Authorization"]
-        else:
-            headers = default_headers
-
-        response = requests.post(url, headers=headers,
-                                 data=json.dumps(body, default=str))
-
-        return response
-
-    def put(self, url: str, body: dict, headers=None):
-        """
-        Upsert a record in Netsuite.
-
-        Wrapper function for all endpoints in the Netsuite API that accept the 
-        PUT http method.
-
-        "The upsert operation enables you to either create a record, or update an existing record. You 
-        can only use the upsert operation when you use an external ID in the request URL and when 
-        you use the PUT HTTP method." - Netsuite Documentation
-
-        Args:
-        -----
-        - url (str) -> The url from which to get data (actual url, not base string. see Examples section for example)
-        - body (dict) -> The PUT body containing fields to update and their new values as key-value pairs.
-        - headers (dict) -> Optional dictionary of headers to override the defaults. (See README or NetsuiteOAuth.generate_headers for defaults)
-
-        Returns:
-        --------
-        - response (obj) -> requests.response object from PUT request. 
-
-        Examples:
-        ---------
-        URL: https://{{ NETSUITE ACCOUNT ID }}.suitetalk.api.netsuite.com/services/rest/record/v1/job/eid:54321
-
-        BODY: {"entityid": "Updated Customer"} <- update customer 12345's entity id to "Updated Customer"
-
-        HEADERS: {"Prefer": "respond-async", "limit": 100, "offset": 2}
-            NOTE: The get method would take the above headers parameter and add the Authorization 
-            header to it, in order to properly sign the request. All other default headers will be dropped.
-        """
-
-        # type checking
-        if headers and not isinstance(headers, dict):
-            raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
-
-        if not isinstance(body, dict):
-            raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(body)))
-
-        # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("PUT", url)
-
-        # override headers if necessary
-        if headers:
-            headers["Authorization"] = default_headers["Authorization"]
-        else:
-            headers = default_headers
-
-        response = requests.put(
-            url, headers=headers, data=json.dumps(body, default=str))
-
-        return response
-
-    def delete(self, url: str, headers=None):
-        """
-        Delete a record in Netsuite.
-
-        Wrapper function for all endpoints in Netsuite API that accept the DELETE http method. 
-
-        Args:
-        -----
-        - url (str) -> The url from which to get data (actual url, not base string. see Examples section for example)
-        - headers (dict) -> Optional dictionary of headers to override the defaults. (See README or NetsuiteOAuth.generate_headers for defaults)
-
-        Returns:
-        --------
-        - response (obj) -> requests.response object from DELETE request. 
-
-        Examples:
-        ---------
-        URL: https://{{ NETSUITE ACCOUNT ID }}.suitetalk.api.netsuite.com/services/rest/record/v1/job/ 
-
-        HEADERS: {"Prefer": "respond-async", "limit": 100, "offset": 2}
-            NOTE: The get method would take the above headers parameter and add the Authorization 
-            header to it, in order to properly sign the request. All other default headers will be dropped.
-        """
-
-        # type checking
-        if headers and not isinstance(headers, dict):
-            raise TypeError(
-                "Expected dictionary for headers parameter. Received: {}".format(type(headers)))
-
-        # generate default auth headers:
-        default_headers = self.auth.generate_auth_header("DELETE", url)
-
-        # override headers if necessary
-        if headers:
-            headers["Authorization"] = default_headers["Authorization"]
-        else:
-            headers = default_headers
-
-        response = requests.delete(url, headers=headers)
-
-        return response
+        return res
